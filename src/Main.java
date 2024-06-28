@@ -5,10 +5,12 @@ import models.Node;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         HashTable tablaHash = new HashTable();
 
         String line = "";
@@ -31,14 +33,24 @@ public class Main {
         {
             e.printStackTrace();
         }
-        Node nodo =  tablaHash.busqueda("U41-TDkb3V8S8vEOCrpP7Q","Ironwood Golf Club", "10955 Fall Rd");
+        System.out.println("Escriba clave del registro: ");
+        String clave = scanner.nextLine();
+        System.out.println("Nombre del registro: ");
+        String nombre = scanner.nextLine();
+        System.out.println("Dirección del registro: ");
+        String address = scanner.nextLine();
+
+
+        Node nodo =  tablaHash.busqueda(clave,nombre,address);
 
         if (nodo == null){
             System.out.println("No se encontró");
         } else{
             String name = nodo.getObjBusiness().getName();
             String adress = nodo.getObjBusiness().getAddress();
-            System.out.println("El nombre es: " + name + ", con dirección: " + adress );
+            String city = nodo.getObjBusiness().getCity();
+            String state = nodo.getObjBusiness().getState();
+            System.out.println("El nombre es: " + name + ", con dirección: " + adress + " , ciudad: " +city+" , Estado: "+ state );
         }
 
 
