@@ -22,6 +22,13 @@ public class Bussines {
         return address;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public String getState() {
+        return state;
+    }
 
     @Override
     public String toString() {
