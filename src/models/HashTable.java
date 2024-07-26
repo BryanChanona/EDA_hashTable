@@ -1,7 +1,7 @@
 package models;
 
 public class HashTable {
-    private static final int SIZE = 50021;
+    int SIZE = 50021;
     private LinkedList[] linkedListDiv = new LinkedList[SIZE];
     private LinkedList[] linkedListMul = new LinkedList[SIZE];
 
