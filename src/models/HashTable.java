@@ -1,62 +1,90 @@
 package models;
 
 public class HashTable {
-    LinkedList[] linkedList = new LinkedList[100003];
+    private static final int SIZE = 50021;
+    private LinkedList[] linkedListDiv = new LinkedList[SIZE];
+    private LinkedList[] linkedListMul = new LinkedList[SIZE];
 
-    public void insercion(String id, Bussines objBusiness) {
-        int indiceReferencia = this.convertirASCII(id);
-        int espacioTablaHash = this.hashDivision(indiceReferencia);
+    public void insercion(int opcion, String id, Bussines objBusiness) {
+        int indiceReferencia = convertirASCII(id);
+        int espacioTablaHashDiv = hashDivision(indiceReferencia);
+        int espacioTablaHashMult = hashMultiplicacion(indiceReferencia);
 
+        switch (opcion) {
+            case 1:
+                if (linkedListDiv[espacioTablaHashDiv] == null) {
+                    linkedListDiv[espacioTablaHashDiv] = new LinkedList();
+                }
+                linkedListDiv[espacioTablaHashDiv].push(objBusiness);
+                break;
 
-        if (this.linkedList[espacioTablaHash] == null) {
-            this.linkedList[espacioTablaHash] = new LinkedList();
+            case 2:
+                if (linkedListMul[espacioTablaHashMult] == null) {
+                    linkedListMul[espacioTablaHashMult] = new LinkedList();
+                }
+                linkedListMul[espacioTablaHashMult].push(objBusiness);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Opción no válida");
         }
-
-        this.linkedList[espacioTablaHash].push(objBusiness);
     }
 
     public int convertirASCII(String id) {
         int suma = 0;
-
         for (int i = 0; i < id.length(); i++) {
-            char caracter = id.charAt(i);
-            int valorASCCI = (int) caracter;
-            suma += valorASCCI;
+            suma += (int) id.charAt(i);
         }
-
         return suma;
     }
 
     public int hashDivision(int indiceReferencia) {
-        int clave = indiceReferencia % this.linkedList.length;
-        return clave;
+        return indiceReferencia % SIZE;
     }
 
     public int hashMultiplicacion(int indiceReferencia) {
         double aurea = 0.3565;
-        double producto = (this.linkedList.length * ((indiceReferencia * aurea) % 1));
-
-        int clave = (int) producto;
-        return clave;
+        double producto = (SIZE * ((indiceReferencia * aurea) % 1));
+        return (int) producto;
     }
 
-    public Node busqueda(String clave, String name, String address) {
-        int referencia = this.convertirASCII(clave);
-        int espacioTabla = this.hashDivision(referencia);
+    public Node busqueda(int opcion, String clave) {
+        int referencia = convertirASCII(clave);
+        int espacioTablaHashDiv = hashDivision(referencia);
+        int espacioTablaHashMult = hashMultiplicacion(referencia);
+        long timeInicio = System.nanoTime();
+        Node nodoEncontrado = null;
 
-        for (int i = 0; i < this.linkedList.length; i++) {
-            if (this.linkedList[i] != null) {
-                if (i == espacioTabla) {
-                    for (int j = 0; j < this.linkedList[i].size(); j++) {
-                        Node nodoBuscar = this.linkedList[i].getElementAt(j);
-                        if (nodoBuscar.getObjBusiness().getName().equals(name) && nodoBuscar.getObjBusiness().getAddress().equals(address)) {
-                            return nodoBuscar;
-                        }
-                    }
+        switch (opcion) {
+            case 1:
+                if (linkedListDiv[espacioTablaHashDiv] != null) {
+                    nodoEncontrado = buscarEnLista(linkedListDiv[espacioTablaHashDiv], clave);
                 }
+                break;
+
+            case 2:
+                if (linkedListMul[espacioTablaHashMult] != null) {
+                    nodoEncontrado = buscarEnLista(linkedListMul[espacioTablaHashMult], clave);
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Opción no válida");
+        }
+
+        long timeFinal = System.nanoTime();
+        double seconds = (timeFinal - timeInicio) / 1_000_000.0;
+        System.out.println("El tiempo de ejecución fue: " + seconds);
+        return nodoEncontrado;
+    }
+
+    private Node buscarEnLista(LinkedList list, String clave) {
+        for (int i = 0; i < list.size(); i++) {
+            Node nodoBuscar = list.getElementAt(i);
+            if (nodoBuscar.getObjBusiness().getId().equals(clave)) {
+                return nodoBuscar;
             }
         }
         return null;
     }
-
 }

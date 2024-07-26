@@ -8,7 +8,6 @@ public class Node{
     public Node (Bussines objBusiness){
         this.objBusiness = objBusiness;
         this.next = null;
-
     }
 
     public Bussines getObjBusiness() {
